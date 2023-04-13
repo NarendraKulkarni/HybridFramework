@@ -1,6 +1,6 @@
 package com.tutorialsninja.qa.testcases;
 
-//All imports for removing errors
+//All import are imported
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
