@@ -1,0 +1,426 @@
+https://www.youtube.com/watch?v=5OBXZMiuYnY&t=11267s
+
+
+
+
+Step by Step Selenium test ng framework
+1)Create new folder for fresh worspace for new project in eclipse
+2)Create new maven project, in filter field select maven-archtype-quickstart then select "org.apache.maven.archtypes"
+3)Give group ID, artifact id, package name 
+4) Delete the packages under src/main/java and src/test/java
+5)Craete new package com.tutorialsninja.qa.testcases under src/test/java
+6)Craete new class "Login" under new package created in step 5 click finish
+7)Font and theame can be changed in Window>preferences>general>apperance>color and font
+8)As we are using testNG hence main method is incorporated in it hence we dont use main method in any of class
+9)Remove Junit dependency from pom.xml
+10)Create one method "verifyLoginWithValidCredential"("Java method means test case in selenium testng")
+11)As main method is not used hence we are using TestNG hence we have to use annotations for method we created
+ in step 10
+12) Add "@Test on top of method created in step 10
+13)Hover the mouse over "@Test" and it gives option to import Junit libraries but project is not configured for
+testNG hence we have to import TestNG library in pom.xml 
+14)Goto "mvn repository.com" and search TestNG, select latest version of TestNG and copy TestNG xml path to be added to
+pom.xml in eclipse. Copy xml for TestNG and save it to pom.xml in dependencies and save eclipse project
+15)To organize the pasted lines, select all lines and press tab button it will be indented properly
+16)Hover the mouse over "@Test" and import testng annotations libraries. Now java method got convereted into TestNG test case or testNG test method
+17) Add dependency for selenium java from "mvn reportsitory.com" to pom.xml and save.
+18)After selenium 4.6 the need to use browser driver is over. Selenium manager comes up with browser driver in built. Simply invoke "WebDriver driver = new ChromeDriver();" and it will open the browser. No need to set properties.
+19)Hover mouse on WebDriver and import interface libraries and hover mouse on ChromeDriver to import chrome driver class from selenium
+20)Right click project run java application option comes only when main method is used. As we are using testng but testng plugin is not installed. Goto help>installed softwares and check if testng plugin is installed. Also go to Window>"Show view" and search for testng. If it is not listed then testng eclipse ID plugin is not installed.
+21)Go to https://testng.org, then click on download and then copy " https://testng.org/testng-eclipse-update-site.
+22)Open INstall new software option in eclipse and enter in work with field "https://testng.org/testng-eclipse-update-site" by pressing enter then select TestNG plugin option and install it Eclipse will restart
+23)After eclipse restart there will be additional option such as "RunAll, "Run|Debug" option in login class
+24)Try to click "RunAll" option and confirm browser is opening seamlessly
+25)Maximize the window and control timeouts
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+	    driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
+26)Run the test script to login to webpage
+27)Refresh project to view test-output. Delete output folder everytime to view fresh result
+28)For poin 26 & 27 do it in eclipse
+
+driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+	    driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
+		driver.get("http://tutorialsninja.com/demo/");
+		driver.findElement(By.xpath("//span[text()='My Account']")).click();
+	    driver.findElement(By.linkText("Login")).click();
+	    driver.findElement(By.id("input-email")).sendKeys("amotooricap9@gmail.com");
+	    driver.findElement(By.id("input-password")).sendKeys("12345");
+	    driver.findElement(By.xpath("//input[@value='Login']")).click();
+	    
+	    Assert.assertTrue(driver.findElement(By.linkText("Edit your account information")).isDisplayed());
+		driver.quit();
+
+29)Five test cases 
+
+public class Login {
+	
+	WebDriver driver;
+	public void tearDown() {
+		
+		driver
+	}
+	
+	@Test(priority=1)
+	public void verifyLoginWithValidCredentials() {
+		
+		 driver = new FirefoxDriver();
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+	    driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
+		driver.get("http://tutorialsninja.com/demo/");
+	    driver.findElement(By.xpath("//span[text()='My Account']")).click();
+	    driver.findElement(By.linkText("Login")).click();
+	    driver.findElement(By.id("input-email")).sendKeys("amotooricap9@gmail.com");
+	    driver.findElement(By.id("input-password")).sendKeys("12345");
+	    driver.findElement(By.xpath("//input[@value='Login']")).click();
+	    
+	    Assert.assertTrue(driver.findElement(By.linkText("Edit your account information")).isDisplayed(), "Edit your account information option is not displayed.");
+		driver.quit();
+	}
+
+	@Test(priority=2)
+	public void verifyLoginWithInvalidCredentials() {
+		
+		 driver = new FirefoxDriver();
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+	    driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
+		driver.get("http://tutorialsninja.com/demo/");
+	    driver.findElement(By.xpath("//span[text()='My Account']")).click();
+	    driver.findElement(By.linkText("Login")).click();
+	    driver.findElement(By.id("input-email")).sendKeys("amotooricaps9"+generateTimeStamp()+"@gmail.com");
+	    driver.findElement(By.id("input-password")).sendKeys("1234567890");
+	    driver.findElement(By.xpath("//input[@value='Login']")).click();
+	    String actualwarningMessage = driver.findElement(By.xpath("//div[contains(@class,'alert-dismissible')]")).getText(); 
+	    String expectedwarningmessage = "Warning: No match for E-Mail Address and/or Password.";
+	    Assert.assertTrue(actualwarningMessage.contains(expectedwarningmessage),"Expected warning message is not displayed");
+	    driver.quit();
+	    
+	    
+	}
+	@Test(priority=3)
+	public void verifyLoginWithInvalidEmailAndValidPassword() {
+		
+		 driver = new FirefoxDriver();
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+	    driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
+		driver.get("http://tutorialsninja.com/demo/");
+	    driver.findElement(By.xpath("//span[text()='My Account']")).click();
+	    driver.findElement(By.linkText("Login")).click();
+	    driver.findElement(By.id("input-email")).sendKeys("amotooricaps9"+generateTimeStamp()+"@gmail.com");
+	    driver.findElement(By.id("input-password")).sendKeys("12345");
+	    driver.findElement(By.xpath("//input[@value='Login']")).click();
+	    String actualwarningMessage = driver.findElement(By.xpath("//div[contains(@class,'alert-dismissible')]")).getText(); 
+	    String expectedwarningmessage = "Warning: No match for E-Mail Address and/or Password.";
+	    Assert.assertTrue(actualwarningMessage.contains(expectedwarningmessage),"Expected warning message is not displayed");
+	    driver.quit();
+		
+	}
+	
+	@Test(priority=4)
+	public void  verifyLoginValidEmailAndInvalidPassowrd() {
+		
+		
+		 driver = new FirefoxDriver();
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+	    driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
+		driver.get("http://tutorialsninja.com/demo/");
+	    driver.findElement(By.xpath("//span[text()='My Account']")).click();
+	    driver.findElement(By.linkText("Login")).click();
+	    driver.findElement(By.id("input-email")).sendKeys("amotooricaps9@gmail.com");
+	    driver.findElement(By.id("input-password")).sendKeys("1234567890");
+	    driver.findElement(By.xpath("//input[@value='Login']")).click();
+	    String actualwarningMessage = driver.findElement(By.xpath("//div[contains(@class,'alert-dismissible')]")).getText(); 
+	    String expectedwarningmessage = "Warning: No match for E-Mail Address and/or Password.";
+	    Assert.assertTrue(actualwarningMessage.contains(expectedwarningmessage),"Expected warning message is not displayed");
+	    driver.quit();
+	}
+	
+	@Test(priority=5)
+	public void verifyLoginWithoutProvidingCredentials() {
+		
+		 driver = new FirefoxDriver();
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+	    driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
+		driver.get("http://tutorialsninja.com/demo/");
+	    driver.findElement(By.xpath("//span[text()='My Account']")).click();
+	    driver.findElement(By.linkText("Login")).click();
+	    driver.findElement(By.id("input-email")).sendKeys(" ");
+	    driver.findElement(By.id("input-password")).sendKeys(" ");
+	    driver.findElement(By.xpath("//input[@value='Login']")).click();
+	    String actualwarningMessage = driver.findElement(By.xpath("//div[contains(@class,'alert-dismissible')]")).getText(); 
+	    String expectedwarningmessage = "Warning: No match for E-Mail Address and/or Password.";
+	    Assert.assertTrue(actualwarningMessage.contains(expectedwarningmessage),"Expected warning message is not displayed");
+	    driver.quit();
+	}
+	
+	public String generateTimeStamp() {
+		
+		Date date = new Date();
+		return date.toString().replace(" ", "_").replace(":", "_");
+		
+	}
+
+
+30)Recovery method "tear down" for failed test scripts, creating new method teardown then "AfterMethod" testNG annotation is added
+so that it will run after execution of every method hence "driver.quit" was commented in respective test scripts.
+
+31)Add common setup method with testNG annotation as "BeforeMethod" in all 5 test scripts
+
+32)Now add test scripts for Register functionality
+
+33)Return email with timestamp method/function moved to src/main/java>com.tutorialsninja.qa.utils package. Add static word after
+public method becuase static methods can be accessed using class name. The static method can be accessed without creating object.
+
+34)Methods which are common to test case(respective class files) need to be moved to src>main>java and accessed as utlities.
+35) Register test cases 
+public class Register {
+	
+	WebDriver driver;
+	
+	@BeforeMethod
+	public void setup() {
+		
+		String browserName = "Edge";
+		
+		if (browserName.equals("Edge")) {
+			
+			driver = new EdgeDriver();
+			
+		}else if (browserName.equals("Firefox")) {
+			
+			driver = new FirefoxDriver();
+		}
+		
+		
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
+		driver.get("http://tutorialsninja.com/demo/");
+		driver.findElement(By.xpath("//span[text()='My Account']")).click();
+		driver.findElement(By.linkText("Register")).click();
+	}
+	
+	@AfterMethod
+	public void tearDown() {
+		driver.quit();
+	}
+	
+	@Test(priority=1)
+	public void verifyRegisteringAnAccountWithMandatoryFields() {
+		
+	
+		driver.findElement(By.id("input-firstname")).sendKeys("Arun");
+		driver.findElement(By.id("input-lastname")).sendKeys("Motoori");
+		driver.findElement(By.id("input-email")).sendKeys(Utilities.generateEmailWithTimestamp());
+		driver.findElement(By.id("input-telephone")).sendKeys("1234567890");
+		driver.findElement(By.id("input-password")).sendKeys("12345");
+		driver.findElement(By.id("input-confirm")).sendKeys("12345");
+		driver.findElement(By.name("agree")).click();
+		driver.findElement(By.xpath("//input[@value='Continue']")).click();
+		
+		String actualSuccessHeading = driver.findElement(By.xpath("//div[@id='content']/h1")).getText();
+		
+		Assert.assertEquals(actualSuccessHeading, "Your Account Has Been Created!","Account Success Page is not displayed");
+		
+		//driver.quit();
+	}
+	@Test(priority=2)
+	public void verifyRegisteringAccountByProvidingAllFields() {
+		
+	
+		driver.findElement(By.id("input-firstname")).sendKeys("Arun");
+		driver.findElement(By.id("input-lastname")).sendKeys("Motoori");
+		driver.findElement(By.id("input-email")).sendKeys(Utilities.generateEmailWithTimestamp());
+		driver.findElement(By.id("input-telephone")).sendKeys("1234567890");
+		driver.findElement(By.id("input-password")).sendKeys("12345");
+		driver.findElement(By.id("input-confirm")).sendKeys("12345");
+		driver.findElement(By.xpath("//input[@name='newsletter'][@value='1']")).click();
+		driver.findElement(By.name("agree")).click();
+		driver.findElement(By.xpath("//input[@value='Continue']")).click();
+		
+		String actualSuccessHeading = driver.findElement(By.xpath("//div[@id='content']/h1")).getText();
+		
+		Assert.assertEquals(actualSuccessHeading, "Your Account Has Been Created!","Account Success Page is not displayed");
+		
+		//driver.quit();
+		
+	}
+	 @Test(priority=3)
+	public void verifyRegisteringAccountWithExistingEmailAddress() {
+		
+		  
+			driver.findElement(By.id("input-firstname")).sendKeys("Arun");
+			driver.findElement(By.id("input-lastname")).sendKeys("Motoori");
+			driver.findElement(By.id("input-email")).sendKeys("amotooricap9@gmail.com");
+			driver.findElement(By.id("input-telephone")).sendKeys("1234567890");
+			driver.findElement(By.id("input-password")).sendKeys("12345");
+			driver.findElement(By.id("input-confirm")).sendKeys("12345");
+			driver.findElement(By.xpath("//input[@name='newsletter'][@value='1']")).click();
+			driver.findElement(By.name("agree")).click();
+			driver.findElement(By.xpath("//input[@value='Continue']")).click();
+			
+			String actualWarning = driver.findElement(By.xpath("//div[contains(@class,'alert-dismissible')]")).getText();
+			Assert.assertTrue(actualWarning.contains("Warning: E-Mail Address is already registered!"),"Warning message regarding duplicate email address is not displayed.");
+			
+			//driver.quit();
+		 
+	}
+	 
+	 @Test(priority=4)
+	 public void verifyRegisteringAccountWithoutFillingAnyDetails() {
+		 
+		    
+			driver.findElement(By.xpath("//input[@value='Continue']")).click();
+			
+			String actualPrivacyPolicyWarning = driver.findElement(By.xpath("//div[contains(@class,'alert-dismissible')]")).getText();
+			Assert.assertTrue(actualPrivacyPolicyWarning.contains("Warning: You must agree to the Privacy Policy!"),"Privacy Policy warning message is not displayed");
+			
+			String actualFirstNameWarning = driver.findElement(By.xpath("//input[@id='input-firstname']/following-sibling::div")).getText();
+			Assert.assertEquals(actualFirstNameWarning,"First Name must be between 1 and 32 characters!","First Name warning message is not displayed");
+			
+			String actualLastNameWarning = driver.findElement(By.xpath("//input[@id='input-lastname']/following-sibling::div")).getText();
+			Assert.assertEquals(actualLastNameWarning,"Last Name must be between 1 and 32 characters!","Last Name warning message is not displayed");
+			
+			String actualEmailWarning = driver.findElement(By.xpath("//input[@id='input-email']/following-sibling::div")).getText();
+			Assert.assertEquals(actualEmailWarning,"E-Mail Address does not appear to be valid!","Email warning message is not displayed");
+			
+			String actualTelephoneWarning = driver.findElement(By.xpath("//input[@id='input-telephone']/following-sibling::div")).getText();
+			Assert.assertEquals(actualTelephoneWarning,"Telephone must be between 3 and 32 characters!","Telephone warning message is not displayed");
+			
+			String actualPasswordWarning = driver.findElement(By.xpath("//input[@id='input-password']/following-sibling::div")).getText();
+			Assert.assertEquals(actualPasswordWarning,"Password must be between 4 and 20 characters!","Password warning message is not displayed");
+			
+			//driver.quit();
+	 }
+}
+
+
+
+36) Setup method had browser selection and opening of application method. It was moved to base class and it was extended in respective test case.
+37)driver was initialized in login and register setup method by extending base class which is opening browser and application
+38)Right click project name and select conver to testng  to create testng.xml file. Create under new source folder src/test/resources
+39)Run test cases from testng.xml file
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Tutorials ninja automation Suite">
+  <test thread-count="5" name="Tutorials Ninja Test">
+    <classes>
+      <class name="com.tutorialsninja.qa.testcases.Register"/>
+      <class name="com.tutorialsninja.qa.testcases.Login"/>
+    </classes>
+  </test> <!-- Test -->
+</suite> <!-- Suite -->
+
+
+40)Load the property file before browser initialization. Create another package under src/main/java and create property file under it
+Properties prop;
+	public void LoadPropertiesFile() {
+		
+		prop = new Properties();
+		File propfile = new File(System.getProperty("user.dir")+"\\src\\main\\java\\com\\tutorialsninja\\qa\\config\\config.properties");
+		
+		
+		try {
+			
+		
+		FileInputStream fis = new FileInputStream(propfile);
+		prop.load(fis);
+		}catch(Throwable e) {
+			
+			e.printStackTrace();
+		}
+
+
+Access URL from property file by driver.get(prop.getProperty("url"));
+
+
+41)Project level properties should be used in properties file
+42)If super is used in child constructor then it will inherit parent consturctor and execute it.
+43)System.getPRoperty(user.dir) => gives project path then search respective files
+44) Read from excel 4:13:0
+45)By writing DataProvider on top of test script it becomes data driven
+46)4:12:57
+47)Right click on project and run as maven => it will fail with error lombok hence install lombok dependencies
+48)Make sure maven-surefire-plugin is present in pom.xml
+49) Replace in pom.xml (For maven to execute pom.xml and pom.xml refers to testng.xml)
+
+<plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.22.1</version>
+        </plugin>
+
+with 
+
+ <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <suiteXmlFiles>
+            <suiteXmlFile>testng.xml</suiteXmlFile>
+          </suiteXmlFiles>
+        </configuration>
+      </plugin>
+	  
+	  
+50) Check the path of testng.xml in pom.xml add "src/test/resources/testng.xml"
+
+51) Copy Jenkins.war file at some location and run command  java -jar jenkins.war then it will halt at password. Copy password ab38975a76344bc595bd435a7f9460ef
+52) By default jenkins will start at 8080 port (admin/portal123)
+53) Genkins can be run on different ports by java -jar jenkins.war --httpPort=9090
+54)Install sugested plugin, select this option.
+55) Click on "Start Using Jenkins"
+56)Before creating job goto manage jenkins
+57)Select "Global Tool Configuration option
+58)Set Java and Maven folders and save changes. For Java goto jdk folder Set path where java and maven installed on laptop
+59)Creating maven job is not option avilable hence goto Dashboard>Manage Jenkins
+60)Select available plugin then search for "Maven Integration" and select "install without restart"
+61)Maven option not working hence uninstalled, ignore 56 to 60
+62)In Build steps select "Invoke top level Maven targets"
+63)Install TestNG result plugin without restart option
+64)Post build action select testng results
+
+65)In search option in eclipse search for "Git" then select "Git Repository"
+66)Right click project and select Team> Share Project
+67)Right click project and click on "Add to Index"
+68)Right click project and click on "Commit" then provide commit comments and click commit button on right hand side 
+69)Create repository on github knp.1183@gmail.com/Narendra@1234#
+https://github.com/NarendraKulkarni/HybridFramework.git
+https://github.com/NarendraKulkarni/HybridFramework
+
+70)Right click project select > Remote >Push ; enter user name password for github login click Next
+71)Select master branch in "Source Ref", destnination ref will come master automatically
+72)Click on Add Specs then click checkbox "Forced Update" click finish
+It will ask user name password - upon entering github user name password it fails hence use token
+73)Go to github/settings/tokens and generate new token (classic type) and copy it, then use it in step 72
+(While creating token give notes as Ltoken and select repo checkbox only)
+
+74)Change workspace in eclipse to simulate new user accessing github reportsitory and downloading code
+75)Black theme for new user and white theme for master user
+76)Search for git and click "Git Repository"
+77)Click on clone a repository in URI field paste "https://github.com/NarendraKulkarni/HybridFramework.git"
+78)Use github user name and password and click Next
+79)Select Master and click Next then click on Finish
+80)Create new project by importing it then select Git>Project from Git> Click Next> Existing Repository>Select displayed project name> Click Next>Click Finish
+81)Run project
+82)Change some code to commit changes, changed LoginTest.java by adding commented
+83)Move to staging aread my right click project > Team > Add to index	so that changes made will be moved to staging
+84)Commite changes to child branch and then commit changes to it
+85)Right click branches and switch to new branch and name it as "NewUserBranch" click finish
+86)Right click project >Team> Commit and provide comment and click commit button
+87)Right click children branch > click  push branch enter github user name and token
+
+
+
+
+
+
+
+
